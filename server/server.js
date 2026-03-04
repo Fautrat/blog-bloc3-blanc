@@ -6,14 +6,22 @@ const authRoutes = require('./routes/auth.routes');
 const articleRoutes = require('./routes/article.routes');
 const userRoutes = require('./routes/user.routes');
 const commentRoutes = require('./routes/comment.routes');
+const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.use(cookieParser());
+
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

@@ -6,7 +6,13 @@ exports.register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
-        // Check if user exists
+        const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*._-]).{8,}$/;
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({ 
+                message: 'Le mot de passe doit contenir au moins 8 caractères, une majuscule, un chiffre et un caractère spécial (!@#$%^&*._-)' 
+            });
+        }
+
         const [existing] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
         if (existing.length > 0) return res.status(400).json({ message: 'User already exists' });
 
@@ -31,10 +37,15 @@ exports.login = async (req, res) => {
         }
 
         const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '24h' });
-        res.json({
-            token,
-            user: { id: user.id, username: user.username, email: user.email, avatar: user.avatar }
-        });
+
+res.cookie('token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', 
+    sameSite: 'strict',
+    maxAge: 24 * 60 * 60 * 1000 
+});
+
+res.json({ user: { id: user.id, username: user.username, email: user.email, avatar: user.avatar } });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

@@ -93,7 +93,7 @@ const CommentSection = ({ articleId }) => {
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                 {comment.avatar && <img src={`http://localhost:5000${comment.avatar}`} alt="avatar" style={{ width: '30px', height: '30px', borderRadius: '50%' }} />}
                                 <span style={{ fontWeight: 'bold' }}>{comment.username}</span>
-                                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{new Date(comment.created_at).toLocaleDateString()}</span>
+                                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{new Date(comment.created_at).toLocaleString()}</span>
                             </div>
                             
                             {user && user.id === comment.user_id && (

@@ -45,7 +45,7 @@ const EditProfile = () => {
 
             // Update local storage/context with potentially new username/avatar
             const { data: updatedUser } = await API.get(`/users/${user.id}`);
-            login(updatedUser, localStorage.getItem('token'));
+            login(updatedUser);
 
             navigate(`/profile/${user.id}`);
         } catch (err) {
