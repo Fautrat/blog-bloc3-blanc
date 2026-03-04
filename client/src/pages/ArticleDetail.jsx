@@ -3,6 +3,9 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import API from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import { Edit, Trash2, Calendar, User } from 'lucide-react';
+import CommentSection from '../components/CommentSection';
+import DOMPurify from 'dompurify';
+import { marked } from 'marked';
 
 const ArticleDetail = () => {
     const { id } = useParams();
@@ -79,9 +82,8 @@ const ArticleDetail = () => {
                     )}
                 </div>
 
-                <div style={{ fontSize: '1.2rem', lineHeight: '1.8', whiteSpace: 'pre-wrap' }}>
-                    {article.content}
-                </div>
+                <div style={{ fontSize: '1.2rem', lineHeight: '1.8', whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(marked.parse(article.content)) }}/>
+                <CommentSection articleId={id} />
             </article>
         </div>
     );
